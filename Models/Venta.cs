@@ -11,8 +11,8 @@ public class Venta
     [Range(0, 999999.99)]
     public decimal Total { get; set; }
 
-    public int UsuarioId { get; set; }
-    public virtual Usuario Usuario { get; set; } = null!;
+    [StringLength(100)]
+    public string Vendedor { get; set; } = "Vendedor General";
 
     public virtual ICollection<DetalleVenta> DetallesVenta { get; set; } = new HashSet<DetalleVenta>();
 }

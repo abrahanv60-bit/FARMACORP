@@ -9,13 +9,8 @@ public class ApplicationDbContext : DbContext
         : base(options)
     {
     }
-
-    // LISTA DE TABLAS (DbSet)
-    public DbSet<Categoria> Categorias { get; set; }
-    public DbSet<Laboratorio> Laboratorios { get; set; }
     public DbSet<Producto> Productos { get; set; }
     public DbSet<Lote> Lotes { get; set; }
-    public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<Venta> Ventas { get; set; }
     public DbSet<DetalleVenta> DetallesVenta { get; set; }
 
@@ -23,7 +18,7 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // CONFIGURACIÓN DE PRECISIÓN DECIMAL (ODS 8: Evita errores de redondeo financiero)
+        // Ajuste de precisión para precios y montos (ODS 8)
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             var decimalProperties = entityType.GetProperties()

@@ -175,3 +175,4 @@ E:\FARMACORP\FarmaciaApp\obj\Debug\net9.0\refint\FarmaciaApp.dll
 E:\FARMACORP\FarmaciaApp\obj\Debug\net9.0\FarmaciaApp.pdb
 E:\FARMACORP\FarmaciaApp\obj\Debug\net9.0\FarmaciaApp.genruntimeconfig.cache
 E:\FARMACORP\FarmaciaApp\obj\Debug\net9.0\ref\FarmaciaApp.dll
+E:\FARMACORP\FarmaciaApp\obj\Debug\net9.0\FarmaciaApp.sourcelink.json

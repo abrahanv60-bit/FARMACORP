@@ -32,8 +32,8 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/FARMACORP/FarmaciaApp/Components/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
+[E:/FARMACORP/FarmaciaApp/Components/Pages/Categorias.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDYXRlZ29yaWFzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/FARMACORP/FarmaciaApp/Components/Pages/Error.razor]
@@ -42,10 +42,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [E:/FARMACORP/FarmaciaApp/Components/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/FARMACORP/FarmaciaApp/Components/Pages/Weather.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xXZWF0aGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/FARMACORP/FarmaciaApp/Components/Routes.razor]

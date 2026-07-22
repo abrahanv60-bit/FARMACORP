@@ -1,3 +1,5 @@
+using FarmaciaApp.Interfaces;
+using FarmaciaApp.Repositories;
 using FarmaciaApp.Components;
 using Microsoft.EntityFrameworkCore;
 using FarmaciaApp.Data;
@@ -10,8 +12,11 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnection")));
+// Add services to the container.
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

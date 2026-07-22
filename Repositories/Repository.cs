@@ -1,0 +1,36 @@
+using Microsoft.EntityFrameworkCore;
+using FarmaciaApp.Data;
+using FarmaciaApp.Interfaces;
+
+namespace FarmaciaApp.Repositories;
+
+public class Repository<T> : IRepository<T> where T : class
+{
+    protected readonly ApplicationDbContext _context;
+    protected readonly DbSet<T> _dbSet;
+
+    public Repository(ApplicationDbContext context)
+    {
+        _context = context;
+        _dbSet = context.Set<T>();
+    }
+
+    // Lectura optimizada sin rastreo para mejor rendimiento
+    public async Task<IEnumerable<T>> GetAllAsync() =>
+        await _dbSet.AsNoTracking().ToListAsync();
+
+    public async Task<T?> GetByIdAsync(int id) =>
+        await _dbSet.FindAsync(id);
+
+    public async Task AddAsync(T entity) =>
+        await _dbSet.AddAsync(entity);
+
+    public void Update(T entity) =>
+        _dbSet.Update(entity);
+
+    public void Remove(T entity) =>
+        _dbSet.Remove(entity);
+
+    public async Task<bool> SaveChangesAsync() =>
+        await _context.SaveChangesAsync() > 0;
+}

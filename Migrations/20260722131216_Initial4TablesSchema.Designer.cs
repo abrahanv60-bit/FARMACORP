@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FarmaciaApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260720133222_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260722131216_Initial4TablesSchema")]
+    partial class Initial4TablesSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace FarmaciaApp.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("DetalleVenta", b =>
+            modelBuilder.Entity("FarmaciaApp.Models.DetalleVenta", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,42 +57,6 @@ namespace FarmaciaApp.Migrations
                     b.HasIndex("VentaId");
 
                     b.ToTable("DetallesVenta");
-                });
-
-            modelBuilder.Entity("FarmaciaApp.Models.Categoria", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categorias");
-                });
-
-            modelBuilder.Entity("FarmaciaApp.Models.Laboratorio", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Laboratorios");
                 });
 
             modelBuilder.Entity("FarmaciaApp.Models.Lote", b =>
@@ -132,11 +96,10 @@ namespace FarmaciaApp.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoriaId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LaboratorioId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Categoria")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -154,38 +117,7 @@ namespace FarmaciaApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoriaId");
-
-                    b.HasIndex("LaboratorioId");
-
                     b.ToTable("Productos");
-                });
-
-            modelBuilder.Entity("FarmaciaApp.Models.Usuario", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("NombreUsuario")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Rol")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("FarmaciaApp.Models.Venta", b =>
@@ -203,20 +135,20 @@ namespace FarmaciaApp.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Vendedor")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Ventas");
                 });
 
-            modelBuilder.Entity("DetalleVenta", b =>
+            modelBuilder.Entity("FarmaciaApp.Models.DetalleVenta", b =>
                 {
                     b.HasOne("FarmaciaApp.Models.Lote", "Lote")
-                        .WithMany("DetallesVenta")
+                        .WithMany()
                         .HasForeignKey("LoteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -245,57 +177,7 @@ namespace FarmaciaApp.Migrations
 
             modelBuilder.Entity("FarmaciaApp.Models.Producto", b =>
                 {
-                    b.HasOne("FarmaciaApp.Models.Categoria", "Categoria")
-                        .WithMany("Productos")
-                        .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FarmaciaApp.Models.Laboratorio", "Laboratorio")
-                        .WithMany("Productos")
-                        .HasForeignKey("LaboratorioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Categoria");
-
-                    b.Navigation("Laboratorio");
-                });
-
-            modelBuilder.Entity("FarmaciaApp.Models.Venta", b =>
-                {
-                    b.HasOne("FarmaciaApp.Models.Usuario", "Usuario")
-                        .WithMany("Ventas")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("FarmaciaApp.Models.Categoria", b =>
-                {
-                    b.Navigation("Productos");
-                });
-
-            modelBuilder.Entity("FarmaciaApp.Models.Laboratorio", b =>
-                {
-                    b.Navigation("Productos");
-                });
-
-            modelBuilder.Entity("FarmaciaApp.Models.Lote", b =>
-                {
-                    b.Navigation("DetallesVenta");
-                });
-
-            modelBuilder.Entity("FarmaciaApp.Models.Producto", b =>
-                {
                     b.Navigation("Lotes");
-                });
-
-            modelBuilder.Entity("FarmaciaApp.Models.Usuario", b =>
-                {
-                    b.Navigation("Ventas");
                 });
 
             modelBuilder.Entity("FarmaciaApp.Models.Venta", b =>

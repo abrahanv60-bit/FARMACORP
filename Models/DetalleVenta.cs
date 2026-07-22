@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using FarmaciaApp.Models;
+
+namespace FarmaciaApp.Models;
 
 public class DetalleVenta
 {
@@ -7,8 +8,7 @@ public class DetalleVenta
 
     public int VentaId { get; set; }
     public virtual Venta Venta { get; set; } = null!;
-
-    // Se asocia al Lote específico del que se descontó el stock
+    
     public int LoteId { get; set; }
     public virtual Lote Lote { get; set; } = null!;
 
