@@ -1,4 +1,4 @@
-@model FarmaciaApp.Models.Producto
+@model FarmaciaApp.ViewModels.ProductoCreateViewModel
 
 @{
     ViewData["Title"] = "Registrar Producto";
@@ -51,7 +51,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

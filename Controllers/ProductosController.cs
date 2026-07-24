@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using FarmaciaApp.Interfaces;
 using FarmaciaApp.Models;
+using FarmaciaApp.ViewModels;
 
 namespace FarmaciaApp.Controllers;
 
@@ -26,17 +27,30 @@ public class ProductosController : Controller
         return View();
     }
 
+    // POST: Recibe el ViewModel en lugar de la Entidad directa
     [HttpPost]
-    [ValidateAntiForgeryToken] // Protección contra ataques CSRF
-    public async Task<IActionResult> Create(Producto modelo)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(ProductoCreateViewModel vm)
     {
-        if (ModelState.IsValid) // Validación basada en Data Annotations
+        // 1. Validación en Servidor
+        if (!ModelState.IsValid)
         {
-            await _repository.AddAsync(modelo);
-            await _repository.SaveChangesAsync();
-            return RedirectToAction(nameof(Index)); // Feedback de usuario: redirige al listado
+            return View(vm); // Retorna a la vista con los mensajes de error
         }
-        
-        return View(modelo); // Si falla la validación, devuelve el modelo con sus errores
+
+        // 2. Mapeo del ViewModel a la Entidad de BD
+        var nuevoProducto = new Producto
+        {
+            Nombre = vm.Nombre,
+            PrincipioActivo = vm.PrincipioActivo,
+            Categoria = vm.Categoria,
+            Precio = vm.Precio
+        };
+
+        // 3. Persistencia
+        await _repository.AddAsync(nuevoProducto);
+        await _repository.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
     }
 }
