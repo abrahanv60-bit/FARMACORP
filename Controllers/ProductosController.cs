@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization; // [NUEVO]
 using Microsoft.AspNetCore.Mvc;
 using FarmaciaApp.Interfaces;
 using FarmaciaApp.Models;
@@ -5,6 +6,7 @@ using FarmaciaApp.ViewModels;
 
 namespace FarmaciaApp.Controllers;
 
+[Authorize] // Bloquea acceso anónimo: exige haber iniciado sesión
 public class ProductosController : Controller
 {
     private readonly IRepository<Producto> _repository;
@@ -14,6 +16,7 @@ public class ProductosController : Controller
         _repository = repository;
     }
 
+    // Accesible para cualquier usuario logueado (Admin o Vendedor)
     [HttpGet]
     public async Task<IActionResult> Index()
     {
@@ -21,24 +24,22 @@ public class ProductosController : Controller
         return View(lista);
     }
 
+    // SOLO el Admin puede ver el formulario de registro
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public IActionResult Create()
     {
         return View();
     }
 
-    // POST: Recibe el ViewModel en lugar de la Entidad directa
+    // SOLO el Admin puede guardar un nuevo producto
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(ProductoCreateViewModel vm)
     {
-        // 1. Validación en Servidor
-        if (!ModelState.IsValid)
-        {
-            return View(vm); // Retorna a la vista con los mensajes de error
-        }
+        if (!ModelState.IsValid) return View(vm);
 
-        // 2. Mapeo del ViewModel a la Entidad de BD
         var nuevoProducto = new Producto
         {
             Nombre = vm.Nombre,
@@ -47,7 +48,6 @@ public class ProductosController : Controller
             Precio = vm.Precio
         };
 
-        // 3. Persistencia
         await _repository.AddAsync(nuevoProducto);
         await _repository.SaveChangesAsync();
 

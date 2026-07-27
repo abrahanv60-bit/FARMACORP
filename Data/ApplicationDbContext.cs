@@ -1,14 +1,17 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using FarmaciaApp.Models;
 
 namespace FarmaciaApp.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
+
     public DbSet<Producto> Productos { get; set; }
     public DbSet<Lote> Lotes { get; set; }
     public DbSet<Venta> Ventas { get; set; }
@@ -16,9 +19,8 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder); // CRÍTICO: Configura las tablas internas de Identity
 
-        // Ajuste de precisión para precios y montos (ODS 8)
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             var decimalProperties = entityType.GetProperties()

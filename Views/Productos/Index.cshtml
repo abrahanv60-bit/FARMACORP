@@ -5,12 +5,14 @@
 }
 
 <div class="container mt-4">
-    <!-- Llamada a la Partial View de Resumen -->
-    <partial name="_ResumenCard" model="(Model.Count(), Model.Any() ? Model.Average(p => p.Precio) : 0m)" />
-
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="text-primary fs-3">Catálogo de Productos</h2>
-        <a asp-action="Create" class="btn btn-primary">+ Nuevo Producto</a>
+        
+        <!-- Oculto para vendedores, visible solo para Admin -->
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-primary">+ Nuevo Producto</a>
+        }
     </div>
 
     <div class="table-responsive">
@@ -22,6 +24,10 @@
                     <th>Principio Activo</th>
                     <th>Categoría</th>
                     <th>Precio</th>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th>Acciones</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -33,6 +39,13 @@
                         <td>@item.PrincipioActivo</td>
                         <td><span class="badge bg-info text-dark">@item.Categoria</span></td>
                         <td>Bs. @item.Precio.ToString("F2")</td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td>
+                                <a class="btn btn-sm btn-warning" href="#">Editar</a>
+                                <a class="btn btn-sm btn-danger" href="#">Borrar</a>
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>
