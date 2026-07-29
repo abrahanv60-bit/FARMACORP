@@ -14,6 +14,10 @@ builder.Services.AddRazorComponents()
 // Registrar soporte para Controladores MVC y Vistas
 builder.Services.AddControllersWithViews();
 
+// Habilitar Swagger / OpenAPI para la Web API
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 // 2. [NUEVO] Necesario para cargar las vistas predeterminadas de Login/Registro de Identity UI
 builder.Services.AddRazorPages();
 
@@ -61,6 +65,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Middleware de Swagger en desarrollo
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 // Permitir archivos estáticos (CSS, JS)
 app.UseStaticFiles();
 
