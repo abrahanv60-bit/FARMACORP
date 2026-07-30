@@ -1,17 +1,25 @@
 @model IEnumerable<FarmaciaApp.Models.Producto>
 
 @{
-    ViewData["Title"] = "Productos";
+    ViewData["Title"] = "Productos y Reportes";
 }
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="text-primary fs-3">Productos</h2>
+        <h2 class="text-primary fs-3">Productos e Inteligencia de Negocio</h2>
         
-        <div class="d-flex gap-2">
-            <!-- Botón para la Actividad 09 (Consumo AJAX vía Fetch) -->
+        <div class="d-flex gap-2 flex-wrap">
+            <!-- Botones de Reportes (Actividad 10) -->
+            <a href="/api/ReportesApi/excel" class="btn btn-success text-white">
+                📊 Descargar Excel
+            </a>
+            <a href="/api/ReportesApi/pdf" class="btn btn-danger text-white" target="_blank">
+                📄 Descargar PDF
+            </a>
+
+            <!-- Botón para Consumo AJAX vía Fetch (Actividad 09) -->
             <button id="btnCargar" class="btn btn-info text-white">
-                Cargar Inventario vía AJAX
+                ⚡ Cargar Inventario vía AJAX
             </button>
 
             <!-- Oculto para vendedores, visible solo para Admin -->
@@ -22,7 +30,17 @@
         </div>
     </div>
 
-    <!-- Contenedor donde se cargarán dinámicamente los datos de la API -->
+    <!-- Dashboard Estadístico (Actividad 10: Chart.js) -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="m-0 fs-6 fw-bold">📈 Dashboard: Productos por Categoría</h5>
+        </div>
+        <div class="card-body">
+            <canvas id="graficoCategorias" style="max-height: 260px;"></canvas>
+        </div>
+    </div>
+
+    <!-- Contenedor donde se cargarán dinámicamente los datos de la API (AJAX) -->
     <div id="listaProductos" class="mb-4"></div>
 
     <div class="table-responsive">
@@ -64,7 +82,55 @@
 </div>
 
 @section Scripts {
+    <!-- CDN de Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
+        // ==========================================
+        // 1. Cargar Dashboard (Chart.js)
+        // ==========================================
+        async function cargarGrafico() {
+            try {
+                const res = await fetch("/api/ReportesApi/datos-grafico");
+                if (!res.ok) return;
+
+                const datos = await res.json();
+                const ctx = document.getElementById('graficoCategorias').getContext('2d');
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: datos.map(d => d.etiqueta),
+                        datasets: [{
+                            label: 'Cantidad de Productos',
+                            data: datos.map(d => d.valor),
+                            backgroundColor: 'rgba(37, 114, 169, 0.6)',
+                            borderColor: 'rgba(37, 114, 169, 1)',
+                            borderWidth: 1.5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Error al cargar datos del gráfico:", error);
+            }
+        }
+
+        // Ejecutar la carga del gráfico al iniciar la vista
+        document.addEventListener("DOMContentLoaded", cargarGrafico);
+
+        // ==========================================
+        // 2. Cargar Inventario vía AJAX (Existente)
+        // ==========================================
         document.getElementById("btnCargar").addEventListener("click", async () => {
             const contenedor = document.getElementById("listaProductos");
             
@@ -93,12 +159,13 @@
 
                 // 3. Renderizado dinámico en el DOM
                 datos.forEach(p => {
+                    const stock = p.stockActual ?? p.stock ?? 0;
                     contenedor.innerHTML += `
                         <div class="alert alert-secondary d-flex justify-content-between align-items-center mb-2 shadow-sm">
                             <div>
                                 <strong>${p.nombre}</strong> — Bs. ${p.precio}
                             </div>
-                            <span class="badge bg-primary rounded-pill">Stock Total: ${p.stockActual}</span>
+                            <span class="badge bg-primary rounded-pill">Stock Total: ${stock}</span>
                         </div>`;
                 });
 

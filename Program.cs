@@ -4,8 +4,11 @@ using FarmaciaApp.Data;
 using FarmaciaApp.Interfaces;
 using FarmaciaApp.Repositories;
 using FarmaciaApp.Components;
+using QuestPDF.Infrastructure;
+using FarmaciaApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+QuestPDF.Settings.License = LicenseType.Community;
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -38,6 +41,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 
 // Inyección de dependencias del repositorio
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+builder.Services.AddScoped<ReportService>();
 
 var app = builder.Build();
 
